@@ -1,5 +1,5 @@
 import numpy as np
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 
 def get_path(length, curvature, elem_length=1):
     """
@@ -7,13 +7,13 @@ def get_path(length, curvature, elem_length=1):
     curvature varies between -90 and 90 degrees
     """
     num_pts = int(length / elem_length)
-    angles = np.linspace(0, curvature, num_pts)
-    path = [[0, 0, 0],]
+    angles = np.linspace(0, curvature, num_pts-1)
+    path = [[0.0, 0.0, 0.0],]
 
-    for i in range(num_pts):
-        x = path[-1][0] + elem_length * np.cos(angles[i]*np.pi/180)
-        y = path[-1][1] + elem_length * np.sin(angles[i]*np.pi/180)
-        z = 0
+    for i in range(num_pts-1):
+        x = float(path[-1][0] + elem_length * np.cos(angles[i]*np.pi/180))
+        y = float(path[-1][1] + elem_length * np.sin(angles[i]*np.pi/180))
+        z = float(0)
         path.append([x, y, z])
 
     return path
@@ -30,4 +30,4 @@ def plot_2D_path(path):
 
 if __name__ == '__main__':
     path = get_path(length=10, curvature=90)
-    plot_2D_path(path)
+    # plot_2D_path(path)
