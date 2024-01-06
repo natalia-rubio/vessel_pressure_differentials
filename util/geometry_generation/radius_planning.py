@@ -1,5 +1,5 @@
 import numpy as np
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 from scipy.stats import norm
 
 def get_radii(length, inlet_radius, outlet_radius, stenosis_dict, elem_length=1):
@@ -15,19 +15,19 @@ def get_radii(length, inlet_radius, outlet_radius, stenosis_dict, elem_length=1)
     print(stenosis_multiplier)
     return list(base_radii * stenosis_multiplier)
 
-def plot_radii(radii):
-    """
-    Plots radius along straight path
-    """
-    plt.clf()
-    plt.plot(np.array(radii), "b")
-    plt.plot(-1*np.array(radii), "b")
-    plt.show()
-    return
+# def plot_radii(radii):
+#     """
+#     Plots radius along straight path
+#     """
+#     plt.clf()
+#     plt.plot(np.array(radii), "b")
+#     plt.plot(-1*np.array(radii), "b")
+#     plt.show()
+#     return
 
 if __name__ == '__main__':
     stenosis_dict = {"magnitude": 0.5, 
                     "spread": 0.3,
                     "location": 0.5}
     radii = get_radii(length=10, inlet_radius=1, outlet_radius=2, stenosis_dict=stenosis_dict)
-    plot_radii(radii)
+    # plot_radii(radii)

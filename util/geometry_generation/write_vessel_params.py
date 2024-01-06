@@ -51,5 +51,5 @@ def generate_param_stat_dicts():
 # print(params_stat_dict)
 
 if __name__ == '__main__':
-    generate_param_stat_dicts()
-    write_anatomy_junctions(anatomy = "basic", set_type = "mesh_convergence", num_junctions = 1)
+    #generate_param_stat_dicts()
+    write_anatomy_junctions(anatomy = "basic", set_type = "mesh_convergence", num_junctions = 4)

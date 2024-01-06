@@ -9,9 +9,10 @@ import vtk
 import platform
 from util.geometry_generation.meshing_util import *
 import copy
+import pdb
 
 def construct_model(model_name, segmentations, geo_params):
-
+    
     contour_list = segmentations
     capped_vessels = create_vessels(contour_list=contour_list)
     unioned_model = union_all(capped_vessels)
@@ -29,12 +30,12 @@ def construct_model(model_name, segmentations, geo_params):
     model, walls, caps, ids = combine_walls(model)
     model = combine_caps(model, walls, ids, num_caps = 2)
     print("boundary faces computed")
-    model.write("junction_model", "vtp")
+    #model.write("junction_model", "vtp")
 
     return model
 
-def get_mesh(model_name, model, geo_params, anatomy, mesh_divs = 3, sphere_ref = 0.1, sphere_offset = 0):
-    min_dimension = np.min([geo_params["inlet_radius"], geo_params["outlet_radius"]])
+def get_mesh(model_name, model, geo_params, anatomy, set_type, mesh_divs = 3):
+    min_dimension = min([geo_params["inlet_radius"], geo_params["outlet_radius"]])
     edge_size = min_dimension/mesh_divs 
     caps = model.identify_caps()
     ids = model.get_face_ids()
@@ -59,13 +60,13 @@ def get_mesh(model_name, model, geo_params, anatomy, mesh_divs = 3, sphere_ref =
     mesher.generate_mesh(options)
 
     msh = mesher.get_mesh()
-    generate_mesh_complete_folder(model, mesher, model_name, caps, ids, walls, faces, anatomy, mesh_divs)
+    generate_mesh_complete_folder(model, mesher, model_name, caps, ids, walls, faces, anatomy, set_type)
     return msh, model
 
-def generate_mesh_complete_folder(model, mesher, model_name, caps, ids, walls, faces, anatomy, mesh_divs):
+def generate_mesh_complete_folder(model, mesher, model_name, caps, ids, walls, faces, anatomy, set_type):
     print("Generating mesh complete folder. \n")
     home_dir = os.path.expanduser("~")
-    dir = "data/synthetic_junctions/" + anatomy + "/" + model_name
+    dir = "data/synthetic_junctions/" + anatomy + "/" + set_type + "/" + model_name
 
     if not os.path.exists(dir):
         os.mkdir(dir)

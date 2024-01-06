@@ -16,8 +16,10 @@ def get_vessel_segmentations(geo_params):
     
     radii_list = radius_planning.get_radii(length=geo_params["length"],
                                     inlet_radius=geo_params["inlet_radius"],
-                                    outlet_radius=geo_params["outlet1_radius"],
-                                    stenosis_dict=geo_params["stenosis_dict"],
+                                    outlet_radius=geo_params["outlet_radius"],
+                                    stenosis_dict= {"magnitude": geo_params["stenosis_magnitude"], 
+                                                    "spread": geo_params["stenosis_spread"],
+                                                    "location": geo_params["stenosis_location"]},
                                     elem_length=geo_params["length"]/num_pts)
 
     path = sv.pathplanning.Path()
@@ -36,7 +38,8 @@ def get_vessel_segmentations(geo_params):
                                     center = path_list[i],
                                     normal = path.get_curve_tangent(path_curve_points.index(path_list[i])))
         segmentations.append(contour)
-    return path, segmentations
+    segmentations_polydata_objects = [contour.get_polydata() for contour in segmentations]
+    return [segmentations_polydata_objects,]
 
 if __name__ == '__main__':
     geo_params = {"length": 10, 
@@ -44,9 +47,9 @@ if __name__ == '__main__':
                 "inlet_radius": 1,
                 "outlet1_radius": 2,
                 "outlet2_radius": 2,
-                "stenosis_dict": {"magnitude": 0.5, 
-                                "spread": 0.1,
-                                "location": 0.5}}
+                "stenosis_magnitude": 0.5, 
+                "stenosis_spread": 0.1,
+                "stenosis_location": 0.5}
     path, segmentations = get_vessel_segmentations(geo_params)
     pdb.set_trace()
     # plot_segmentations(segmentations)
