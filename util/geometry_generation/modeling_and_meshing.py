@@ -15,16 +15,16 @@ def construct_model(model_name, segmentations, geo_params):
     
     contour_list = segmentations
     capped_vessels = create_vessels(contour_list=contour_list)
-    unioned_model = union_all(capped_vessels)
-    model = clean(unioned_model)
+    model = remesh_caps(capped_vessels[0])
+    model = clean(model)
     model = norm(model)
     #model.write("junction_model_normed", "vtp")
     # smooth_model = model.get_polydata()
     # smoothing_params = {'method':'constrained', 'num_iterations':30}
-    # smooth_model = sv.geometry.local_sphere_smooth(surface = smooth_model, radius = 1, center = [0, 0, 0], smoothing_parameters = smoothing_params)
-    # # [=== Combine faces ===]
-    # #
-    # model.set_surface(smooth_model)
+    # smooth_model = sv.geometry.local_sphere_smooth(surface = smooth_model, radius = 1, center = [5, 2, 0], smoothing_parameters = smoothing_params)
+    # [=== Combine faces ===]
+    #
+    model.set_surface(model.get_polydata())
     print("Surface set.")
     model.compute_boundary_faces(85)
     model, walls, caps, ids = combine_walls(model)
@@ -48,6 +48,7 @@ def get_mesh(model_name, model, geo_params, anatomy, set_type, mesh_divs = 3):
     mesher.set_model(model)
     mesher.set_boundary_layer_options(number_of_layers=2, edge_size_fraction=0.5, layer_decreasing_ratio=0.8, constant_thickness=False)
     options = sv.meshing.TetGenOptions(global_edge_size = edge_size, surface_mesh_flag=True, volume_mesh_flag=True)
+    options.boundary_layer_inside = True
     options.optimization = 10
     options.quality_ratio = 1
     options.no_bisect = True
@@ -66,7 +67,7 @@ def get_mesh(model_name, model, geo_params, anatomy, set_type, mesh_divs = 3):
 def generate_mesh_complete_folder(model, mesher, model_name, caps, ids, walls, faces, anatomy, set_type):
     print("Generating mesh complete folder. \n")
     home_dir = os.path.expanduser("~")
-    dir = "data/synthetic_junctions/" + anatomy + "/" + set_type + "/" + model_name
+    dir = "data/synthetic_vessels/" + anatomy + "/" + set_type + "/" + model_name
 
     if not os.path.exists(dir):
         os.mkdir(dir)

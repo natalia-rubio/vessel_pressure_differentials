@@ -36,16 +36,16 @@ source /home/users/nrubio/junctionenv/bin/activate\n\
 echo 'Done with svPre.'\n\
 conv=false\n\
 conv_attempts=1\n\
-indir='/scratch/users/nrubio/synthetic_vessels/{anatomy}/{geo_name}/{flow_name}/{num_cores}-procs_case'\n\
-outdir='/scratch/users/nrubio/synthetic_vessels/{anatomy}/{geo_name}/{flow_name}'\n\
+indir='/scratch/users/nrubio/synthetic_vessels/{anatomy}/{set_type}/{geo_name}/{flow_name}/{num_cores}-procs_case'\n\
+outdir='/scratch/users/nrubio/synthetic_vessels/{anatomy}/{set_type}/{geo_name}/{flow_name}'\n\
 echo 'Launching Simulation'\n\
-cd /scratch/users/nrubio/synthetic_vessels/{anatomy}/{geo}/{flow_name}\n\
+cd /scratch/users/nrubio/synthetic_vessels/{anatomy}/{set_type}/{geo_name}/{flow_name}\n\
 mpirun -n {num_cores} /home/groups/amarsden/svSolver-github/BuildWithMake/Bin/svsolver-openmpi.exe {flow_name}_solver.inp\n\
 echo 'Simulation completed'\n\
 /home/groups/amarsden/svSolver-github/BuildWithMake/Bin/svpost.exe -start {num_time_steps-100} -stop {num_time_steps} -incr 100 -vtkcombo -indir $indir -outdir $outdir -vtu solution_flow_{flow_index}.vtu > /dev/null\n\
-python3 /home/users/nrubio/SV_scripts/for_sherlock/check_convergence.py {anatomy} {set_type} {geo_name} {flow_index} {num_time_steps}\n\
+python3 /home/users/nrubio/SV_scripts/vessel_sim_for_sherlock/check_convergence.py {anatomy} {set_type} {geo_name} {flow_index} {num_time_steps}\n\
 kkrm -r $outdir"
-    f = open(f"/scratch/users/nrubio/job_scripts/{geo[0]}_f{i}.sh", "w")
+    f = open(f"/scratch/users/nrubio/job_scripts/{geo_name[0]}_f{flow_index}.sh", "w")
     f.write(geo_job_script)
     f.close()
     return
@@ -62,13 +62,13 @@ set_surface_id_vtp /scratch/users/nrubio/synthetic_vessels/{anatomy}/{set_type}/
 fluid_density 1.06\n\
 fluid_viscosity 0.04\n\
 initial_pressure 0\n\
-initial_velocity 0.0001 {flow_params['vel_in']} 0.0001\n\
+initial_velocity 0.0001 0.0001 0.0001\n\
 prescribed_velocities_vtp /scratch/users/nrubio/synthetic_vessels/{anatomy}/{set_type}/{geo}/mesh-complete/mesh-surfaces/cap_{inlet_cap_number}.vtp\n\
 bct_analytical_shape parabolic\n\
-bct_period {2*num_time_steps*time_step_size}\n\
+bct_period {num_time_steps*time_step_size+10}\n\
 bct_point_number {num_time_steps} \n\
 bct_fourier_mode_number 10\n\
-bct_create /scratch/users/nrubio/synthetic_vessels/{anatomy}/{set_type}/{geo}/mesh-complete/mesh-surfaces/cap_{inlet_cap_number}.vtp /scratch/users/nrubio/synthetic_vessels/{anatomy}/{geo}/{flow_name}/{flow_index}.flow\n\
+bct_create /scratch/users/nrubio/synthetic_vessels/{anatomy}/{set_type}/{geo}/mesh-complete/mesh-surfaces/cap_{inlet_cap_number}.vtp /scratch/users/nrubio/synthetic_vessels/{anatomy}/{set_type}/{geo}/{flow_name}/{flow_index}.flow\n\
 bct_write_dat /scratch/users/nrubio/synthetic_vessels/{anatomy}/{set_type}/{geo}/{flow_name}/bct.dat\n\
 bct_write_vtp /scratch/users/nrubio/synthetic_vessels/{anatomy}/{set_type}/{geo}/{flow_name}/bct.vtp\n\
 pressure_vtp /scratch/users/nrubio/synthetic_vessels/{anatomy}/{set_type}/{geo}/mesh-complete/mesh-surfaces/cap_{res_caps[0]}.vtp 0\n\
@@ -102,7 +102,7 @@ Time Varying Boundary Conditions From File: True\n\
 \n\
 Step Construction: 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1\n\
 \n\
-Number of Resistance Surfaces: 2\n\
+Number of Resistance Surfaces: 1\n\
 List of Resistance Surfaces: {res_caps[0]}\n\
 Resistance Values: {flow_params['res_1']}\n\
 \n\

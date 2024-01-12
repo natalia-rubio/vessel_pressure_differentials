@@ -4,18 +4,18 @@ from util.tools.basic import *
 
 def write_anatomy_junctions(anatomy, set_type, num_junctions):
 
-    if not os.path.exists("data/synthetic_junctions"):
-        os.mkdir("data/synthetic_junctions")
-    if not os.path.exists(f"data/synthetic_junctions/{anatomy}"):
-        os.mkdir(f"data/synthetic_junctions/{anatomy}")
-    if not os.path.exists(f"data/synthetic_junctions/{anatomy}/{set_type}"):
-        os.mkdir(f"data/synthetic_junctions/{anatomy}/{set_type}")
+    if not os.path.exists("data/synthetic_vessels"):
+        os.mkdir("data/synthetic_vessels")
+    if not os.path.exists(f"data/synthetic_vessels/{anatomy}"):
+        os.mkdir(f"data/synthetic_vessels/{anatomy}")
+    if not os.path.exists(f"data/synthetic_vessels/{anatomy}/{set_type}"):
+        os.mkdir(f"data/synthetic_vessels/{anatomy}/{set_type}")
 
     for i in range(num_junctions):
         junction_name = f"{anatomy[0]}_{i}"
-        if os.path.exists(f"data/synthetic_junctions/{anatomy}/{set_type}/{junction_name}/vessel_params_dict") == False:
-                if not os.path.exists(f"data/synthetic_junctions/{anatomy}/{set_type}/{junction_name}"):
-                    os.mkdir(f"data/synthetic_junctions/{anatomy}/{set_type}/{junction_name}")
+        if os.path.exists(f"data/synthetic_vessels/{anatomy}/{set_type}/{junction_name}/vessel_params_dict") == False:
+                if not os.path.exists(f"data/synthetic_vessels/{anatomy}/{set_type}/{junction_name}"):
+                    os.mkdir(f"data/synthetic_vessels/{anatomy}/{set_type}/{junction_name}")
 
                 print(f"Generating {junction_name}")
                 if set_type == "mesh_convergence":
@@ -24,7 +24,7 @@ def write_anatomy_junctions(anatomy, set_type, num_junctions):
                 elif set_type == "random":
                      continue
                 
-                save_dict(params_rand, f"data/synthetic_junctions/{anatomy}/{set_type}/{junction_name}/vessel_params_dict")
+                save_dict(params_rand, f"data/synthetic_vessels/{anatomy}/{set_type}/{junction_name}/vessel_params_dict")
     return
 
 def generate_nominal_params(anatomy):

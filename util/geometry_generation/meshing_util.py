@@ -69,6 +69,7 @@ def union_all(solids,n_cells=100, max_density = 100):
     joined  (sv.modeling.solid): sv solid object
     """
     if len(solids) == 1:
+        print("Single body.  No unioning needed.")
         return solids[0]
     else:
         for i in range(len(solids)):
@@ -171,6 +172,7 @@ def norm(model):
     norm_filter = vtk.vtkPolyDataNormals()
     norm_filter.AutoOrientNormalsOn()
     norm_filter.ComputeCellNormalsOn()
+    #norm_filter.FlipNormalsOn()
     norm_filter.ConsistencyOn()
     norm_filter.SplittingOn()
     norm_filter.NonManifoldTraversalOn()

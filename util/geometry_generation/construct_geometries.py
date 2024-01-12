@@ -29,12 +29,14 @@ def generate_vessel_mesh(geo_name, geo_params, anatomy, set_type, mesh_divs):
 
 def launch_anatomy_geo_sweep(anatomy, set_type, num_geos = 5):
 
-    dir = "data/synthetic_junctions/"+anatomy+"/"+set_type
+    dir = "data/synthetic_vessels/"+anatomy+"/"+set_type
     geos = os.listdir(dir)
     for i in range(num_geos):
 
         geo_name = geos[i]
         print(geo_name)
+        if not geo_name[0].isalnum():
+            continue
         if os.path.exists(dir+"/"+geo_name+"/mesh-complete") == False:
             print("Generating Geometry " + geo_name)
             print(dir+"/"+geo_name+"/junction_params_dict")
@@ -49,7 +51,7 @@ def launch_anatomy_geo_sweep(anatomy, set_type, num_geos = 5):
 
 def launch_mesh_sweep(anatomy, set_type, num_geos = 1):
 
-    dir = "data/synthetic_junctions/" + anatomy + "/" + set_type
+    dir = "data/synthetic_vessels/" + anatomy + "/" + set_type
     geos = os.listdir(dir)
     geos.sort()
 
@@ -57,14 +59,15 @@ def launch_mesh_sweep(anatomy, set_type, num_geos = 1):
     for i in range(len(geos)):
 
         geo_name = geos[i]
+        if not geo_name[0].isalnum():
+            continue
         if os.path.exists(dir+"/"+geo_name+"/mesh-complete") == False:
 
             print("Generating Geometry %d"%i)
-            print(dir+"/"+geo_name+"/junction_params_dict")
             geo_params = load_dict(dir+"/"+geo_name+"/vessel_params_dict")
-
             print(geo_params)
             if anatomy == "basic":
+
                 generate_vessel_mesh(geo_name, geo_params, anatomy, set_type, mesh_divs = mesh_divs_list_basic[i])
             else:
                 print("Didn't recognize anatomy type.")

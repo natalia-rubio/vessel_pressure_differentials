@@ -8,7 +8,7 @@ import pdb
 import random
 import copy
 import pickle
-from get_avg_sol import *
+#from get_avg_sol import *
 
 np.seterr(all='raise')
 np.set_printoptions(threshold=sys.maxsize)

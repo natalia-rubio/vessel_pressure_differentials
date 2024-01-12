@@ -1,7 +1,4 @@
 import sys
-sys.path.append("/home/users/nrubio/SV_scripts")
-#from util.tools.basic import *
-
 import vtk
 import os
 import numpy as np
@@ -10,7 +7,8 @@ from vtk.util.numpy_support import vtk_to_numpy as v2n
 from tqdm import tqdm
 
 from util.get_bc_integrals import get_res_names
-from util.junction_proc import *
+#from util.junction_proc import *
+from geo_processing import *
 from util.vtk_functions import read_geo, write_geo, calculator, cut_plane, connectivity, get_points_cells, clean, Integration
 import pickle
 from sklearn.linear_model import LinearRegression

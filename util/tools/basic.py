@@ -1,5 +1,5 @@
 import sys
-sys.path.append("/home/nrubio/Desktop/junction_pressure_differentials")
+sys.path.append("/home/nrubio/Desktop/vessel_pressure_differentials")
 import numpy as np
 import pickle
 import copy
@@ -11,9 +11,14 @@ import matplotlib.pyplot as plt
 
 plt.rcParams['font.family'] = 'serif'
 plt.rcParams['font.size'] = 16
-plt.rc('text', usetex=True)
+#plt.rc('text', usetex=True)
 colors = ["royalblue", "orangered", "seagreen", "peru", "blueviolet"]
 
+def get_length(locs):
+    length = 0
+    for i in range(1, locs.shape[0]):
+        length += np.linalg.norm(locs[i, :] - locs[i-1, :])
+    return length
 
 def save_dict(di_, filename_):
     with open(filename_, 'wb') as f:

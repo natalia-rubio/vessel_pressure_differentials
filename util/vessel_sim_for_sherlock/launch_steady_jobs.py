@@ -22,9 +22,11 @@ while num_launched < num_geos:
         continue
     if not check_for_centerline(anatomy, set_type, geo_name):
         continue
+    
     try:
         inlet_cap_number, cap_numbers = get_cap_info(anatomy, set_type, geo_name, correct_cap_numbers = 2)
     except:
+        print("Problem with caps.")
         continue
     try:
         inlet_flow, inlet_area = load_params_dict(anatomy, set_type, geo_name)
@@ -33,7 +35,7 @@ while num_launched < num_geos:
         continue
 
     for i, inlet_flow_fac in enumerate([0.25, 0.5, 0.75, 1]):
-
+        print(f"Launching flow {i}.")    
         try:
             flow_index = i; flow_name = f"flow_{flow_index}"
             if num_flows == 2:
@@ -53,11 +55,12 @@ while num_launched < num_geos:
             write_inp_steady(anatomy, set_type, geo_name, flow_index, flow_params, copy.deepcopy(cap_numbers), inlet_cap_number, num_time_steps, time_step_size)
             write_flow_steady(anatomy, set_type, geo_name, flow_index, flow_params["flow_amp"], inlet_cap_number, num_time_steps, time_step_size)
             print("Done writing solver files.")
-            f = open(f"/scratch/users/nrubio/synthetic_vessels/{anatomy}/{geo_name}/{flow_name}/numstart.dat", "w"); f.write("0"); f.close()
+            f = open(f"/scratch/users/nrubio/synthetic_vessels/{anatomy}/{set_type}/{geo_name}/{flow_name}/numstart.dat", "w"); f.write("0"); f.close()
 
-            print(f"Started job for {geo} flow {flow_index}")
-            write_geo_job(anatomy, set_type, geo, flow_name = flow_name, flow_index = flow_index, num_cores = num_cores, num_time_steps = num_time_steps)
+
+            write_job_steady(anatomy, set_type, geo_name, flow_name = flow_name, flow_index = flow_index, num_cores = num_cores, num_time_steps = num_time_steps)
             os.system(f"sbatch /scratch/users/nrubio/job_scripts/{geo[0]}_f{i}.sh")
+            print(f"Started job for {geo} flow {flow_index}")
 
         except:
             continue
