@@ -10,9 +10,14 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 plt.rcParams['font.family'] = 'serif'
-plt.rcParams['font.size'] = 16
+plt.rcParams['font.size'] = 12
 #plt.rc('text', usetex=True)
 colors = ["royalblue", "orangered", "seagreen", "peru", "blueviolet"]
+
+def dP_poiseuille(flow, radius, length):
+    mu = 0.04
+    dP = 8 * mu * length * flow /(np.pi * radius**4)
+    return dP
 
 def get_length(locs):
     length = 0

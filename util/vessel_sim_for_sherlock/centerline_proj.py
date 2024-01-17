@@ -110,3 +110,15 @@ def extract_results(fpath_1d, fpath_3d, fpath_out, only_caps=False, num_time_ste
         reader_1d.GetPointData().GetArray('area').SetValue(i, integral.area())
     write_geo(fpath_out, reader_1d)
     return
+
+def get_soln_dict(sol_path1d, fpath_out, only_caps=False, num_time_steps = 1000):
+    """
+    Get all result array names
+    Args:
+        inp: vtk InputConnection
+        names: list of names to search for
+    Returns:
+        list of result array names
+    """
+    sol1d = read_geo(fpath_1d).GetOutput()
+    return res_names

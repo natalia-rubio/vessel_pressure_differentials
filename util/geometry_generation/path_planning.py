@@ -11,11 +11,11 @@ def get_path(length, curvature, elem_length=1):
     path = [[0.0, 0.0, 0.0],]
 
     for i in range(num_pts-1):
-        x = float(path[-1][0] + elem_length * np.cos(angles[i]*np.pi/180))
-        y = float(path[-1][1] + elem_length * np.sin(angles[i]*np.pi/180))
+        x = float(path[-1][0] + elem_length * np.sin(angles[i]*np.pi/180))
+        y = float(path[-1][1] + elem_length * np.cos(angles[i]*np.pi/180))
         z = float(0)
         path.append([x, y, z])
-
+    path.reverse()
     return path
 
 def plot_2D_path(path):

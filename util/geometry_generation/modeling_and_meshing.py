@@ -15,9 +15,17 @@ def construct_model(model_name, segmentations, geo_params):
     
     contour_list = segmentations
     capped_vessels = create_vessels(contour_list=contour_list)
-    model = remesh_caps(capped_vessels[0])
+    model = capped_vessels[0]
+
+    model_be = bad_edges(model)
+    print("Model Bad Edges: {}".format(model_be))
+    model = norm(model)
+    model = remesh(model)
+    model = remesh_caps(model)
     model = clean(model)
     model = norm(model)
+    model_be = bad_edges(model)
+    print("Model Bad Edges: {}".format(model_be))
     #model.write("junction_model_normed", "vtp")
     # smooth_model = model.get_polydata()
     # smoothing_params = {'method':'constrained', 'num_iterations':30}
