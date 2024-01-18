@@ -43,7 +43,7 @@ cd /scratch/users/nrubio/synthetic_vessels/{anatomy}/{set_type}/{geo_name}/{flow
 mpirun -n {num_cores} /home/groups/amarsden/svSolver-github/BuildWithMake/Bin/svsolver-openmpi.exe {flow_name}_solver.inp\n\
 echo 'Simulation completed'\n\
 /home/groups/amarsden/svSolver-github/BuildWithMake/Bin/svpost.exe -start {num_time_steps-100} -stop {num_time_steps} -incr 100 -vtkcombo -indir $indir -outdir $outdir -vtu solution_flow_{flow_index}.vtu > /dev/null\n\
-python3 /home/users/nrubio/SV_scripts/vessel_sim_for_sherlock/check_convergence.py {anatomy} {set_type} {geo_name} {flow_index} {num_time_steps}\n\
+python3 /home/users/nrubio/SV_scripts/vessel_sim_for_sherlock/check_convergence.py {anatomy} {set_type} {geo_name} {flow_index}\n\
 kkrm -r $outdir"
     f = open(f"/scratch/users/nrubio/job_scripts/{geo_name[0]}_f{flow_index}.sh", "w")
     f.write(geo_job_script)
@@ -65,9 +65,9 @@ initial_pressure 0\n\
 initial_velocity 0.0001 0.0001 0.0001\n\
 prescribed_velocities_vtp /scratch/users/nrubio/synthetic_vessels/{anatomy}/{set_type}/{geo}/mesh-complete/mesh-surfaces/cap_{inlet_cap_number}.vtp\n\
 bct_analytical_shape parabolic\n\
-bct_period {num_time_steps*time_step_size+10}\n\
+bct_period {num_time_steps*time_step_size*4}\n\
 bct_point_number {num_time_steps} \n\
-bct_fourier_mode_number 10\n\
+bct_fourier_mode_number 20\n\
 bct_create /scratch/users/nrubio/synthetic_vessels/{anatomy}/{set_type}/{geo}/mesh-complete/mesh-surfaces/cap_{inlet_cap_number}.vtp /scratch/users/nrubio/synthetic_vessels/{anatomy}/{set_type}/{geo}/{flow_name}/{flow_index}.flow\n\
 bct_write_dat /scratch/users/nrubio/synthetic_vessels/{anatomy}/{set_type}/{geo}/{flow_name}/bct.dat\n\
 bct_write_vtp /scratch/users/nrubio/synthetic_vessels/{anatomy}/{set_type}/{geo}/{flow_name}/bct.vtp\n\
@@ -136,7 +136,7 @@ Quadrature Rule on Boundary: 3"
 def write_flow_steady(anatomy, set_type, geo, flow_index, flow_amp, cap_number, num_time_steps, time_step_size):
     flow_name = f"flow_{flow_index}"
     flow = ""
-    t = np.linspace(start = 0, stop = num_time_steps, num = num_time_steps)
+    t = np.linspace(start = 0, stop = num_time_steps, num = 4*num_time_steps)
     q = t*0
     for i in range(t.size):
         if i < 20:
@@ -144,7 +144,7 @@ def write_flow_steady(anatomy, set_type, geo, flow_index, flow_amp, cap_number, 
         else:
             q[i] = -1 * flow_amp
 
-        flow = flow + "%1.5f %1.3f\n" %(i*time_step_size*2, q[i])
+        flow = flow + "%1.5f %1.3f\n" %(i*time_step_size, q[i])
     f = open(f"/scratch/users/nrubio/synthetic_vessels/{anatomy}/{set_type}/{geo}/{flow_name}/{flow_index}.flow", "w")
     f.write(flow)
     f.close()

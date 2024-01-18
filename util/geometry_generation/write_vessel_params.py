@@ -35,7 +35,7 @@ def generate_nominal_params(anatomy):
     return nominal_params
 
 def generate_param_stat_dicts():
-    anatomy = "basic"
+    anatomy = "curved"
     params_stat_dict = {"length": [8, 12, 10, 1], 
                 "curvature": [30, 90, 60, 20],
                 "inlet_radius": [0.2, 0.6, 0.4, 0.1],
@@ -64,5 +64,5 @@ def generate_param_stat_dicts():
 
 if __name__ == '__main__':
     generate_param_stat_dicts()
-    write_anatomy_junctions(anatomy = "basic", set_type = "mesh_convergence", num_junctions = 4)
+    write_anatomy_junctions(anatomy = "curved", set_type = "mesh_convergence", num_junctions = 4)
     write_anatomy_junctions(anatomy = "straight", set_type = "mesh_convergence", num_junctions = 4)

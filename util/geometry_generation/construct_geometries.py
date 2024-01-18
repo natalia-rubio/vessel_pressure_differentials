@@ -43,7 +43,7 @@ def launch_anatomy_geo_sweep(anatomy, set_type, num_geos = 5):
             geo_params = load_dict(dir+"/"+geo_name+"/vessel_params_dict")
 
             print(geo_params)
-            if anatomy == "basic":
+            if anatomy == "curved" or anatomy == "straight":
                 generate_vessel_mesh(geo_name, geo_params, anatomy, set_type, mesh_divs = 0.1)
             else:
                 print("Didn't recognize anatomy type.")
@@ -55,7 +55,7 @@ def launch_mesh_sweep(anatomy, set_type, num_geos = 1):
     geos = os.listdir(dir)
     geos.sort()
 
-    mesh_divs_list_basic = [1,2,3,4]
+    mesh_divs_list_curved = [1,2,3,4]
     for i in range(len(geos)):
 
         geo_name = geos[i]
@@ -66,9 +66,9 @@ def launch_mesh_sweep(anatomy, set_type, num_geos = 1):
             print("Generating Geometry %d"%i)
             geo_params = load_dict(dir+"/"+geo_name+"/vessel_params_dict")
             print(geo_params)
-            if anatomy == "basic" or anatomy == "straight":
+            if anatomy == "curved" or anatomy == "straight":
 
-                generate_vessel_mesh(geo_name, geo_params, anatomy, set_type, mesh_divs = mesh_divs_list_basic[i])
+                generate_vessel_mesh(geo_name, geo_params, anatomy, set_type, mesh_divs = mesh_divs_list_curved[i])
             else:
                 print("Didn't recognize anatomy type.")
 
@@ -82,12 +82,12 @@ def generate_geometries(anatomy, set_type, num_geos):
     return
 
 # if __name__ == "__main__":
-#     generate_geometries(anatomy = "basic", set_type = "mesh_convergence", num_geos = 150)
+#     generate_geometries(anatomy = "curved", set_type = "mesh_convergence", num_geos = 150)
 
 if __name__ == "__main__":
     anatomy = sys.argv[1]
     set_type = sys.argv[2]
-    generate_geometries(anatomy = "straight", set_type = "mesh_convergence", num_geos = 150)
+    generate_geometries(anatomy = "curved", set_type = "mesh_convergence", num_geos = 150)
 
 # USE THIS COMMAND TO RUN WITH SIMVASCULAR PYTHON:
 # /usr/local/sv/simvascular/2023-02-02/simvascular --python -- util/geometry_generation/launch_anatomy_sweep.py

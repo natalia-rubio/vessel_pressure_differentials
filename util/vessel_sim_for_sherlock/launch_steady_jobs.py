@@ -8,6 +8,7 @@ num_cores = int(sys.argv[4])
 num_geos = int(sys.argv[5])
 num_flows = int(sys.argv[6])
 
+time_step_size = 0.01
 num_launched = 0
 print(f"Launching {num_geos} steady flow sweeps.")
 dir = f"/scratch/users/nrubio/synthetic_vessels/{anatomy}/{set_type}"
@@ -50,7 +51,7 @@ while num_launched < num_geos:
                             "res_1": 100,
                             "res_2": 100}
 
-            time_step_size = 0.0001
+            
             write_svpre_steady(anatomy, set_type, geo_name, flow_index, flow_params, copy.deepcopy(cap_numbers), inlet_cap_number, num_time_steps, time_step_size)
             write_inp_steady(anatomy, set_type, geo_name, flow_index, flow_params, copy.deepcopy(cap_numbers), inlet_cap_number, num_time_steps, time_step_size)
             write_flow_steady(anatomy, set_type, geo_name, flow_index, flow_params["flow_amp"], inlet_cap_number, num_time_steps, time_step_size)

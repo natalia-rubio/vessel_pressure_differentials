@@ -111,7 +111,7 @@ def extract_results(fpath_1d, fpath_3d, fpath_out, only_caps=False, num_time_ste
     write_geo(fpath_out, reader_1d)
     return
 
-def get_soln_dict(sol_path1d, fpath_out, only_caps=False, num_time_steps = 1000):
+def get_res_dict(sol_path1d, only_caps=False, num_time_steps = 2):
     """
     Get all result array names
     Args:
@@ -120,5 +120,48 @@ def get_soln_dict(sol_path1d, fpath_out, only_caps=False, num_time_steps = 1000)
     Returns:
         list of result array names
     """
-    sol1d = read_geo(fpath_1d).GetOutput()
-    return res_names
+    soln = read_geo(sol_path1d).GetOutput()
+    soln_dict = get_all_arrays(soln)
+    res_names = list(soln_dict.keys())
+    res_names.sort()
+
+    pt_inds = [0,-1]
+    pressure_in_time= np.zeros((num_time_steps,len(pt_inds))) # initialize pressure_in_time matrix, each column is a mesh point, each row is a timestep
+    flow_in_time = np.zeros((num_time_steps,len(pt_inds))) # initialize flow_in_time matrix, each column is a mesh point, each row is a timestep
+    area= np.array([soln_dict["area"][0], soln_dict["area"][-1]])
+    times = list()  # list of timesteps
+
+    p_cnt = 0
+    v_cnt = 0
+    for name in res_names:
+        if name[0:8] == "pressure":
+            if name[9:14] == "error":
+                continue
+            pressure_in_time[p_cnt, 0] = soln_dict[name][0]  # add timestep row to pressure_in_time
+            pressure_in_time[p_cnt, 1] = soln_dict[name][-1]  # add timestep row to pressure_in_time
+            p_cnt = p_cnt + 1
+            times.append(float(name[-5:]))  # add timestep to times
+
+        elif name[0:8] == "velocity": # NOTE: keys are labeled "velocity" but are actually flow!!!
+            if name[9:14] == "error":
+                continue
+            flow_in_time[v_cnt, 0] = soln_dict[name][0]  # add timestep row to flow_in_time
+            flow_in_time[v_cnt, 1] = soln_dict[name][-1]  # add timestep row to flow_in_time
+            v_cnt = v_cnt + 1
+
+
+    conv = True; print(pressure_in_time); print(flow_in_time)
+    dP = (pressure_in_time[:,1]-pressure_in_time[:,0])
+    print((dP[1]-dP[0])/dP[1])
+
+    if np.any(np.abs((dP[1]-dP[0])/dP[1]) > 0.01):
+        print("Pressure change not converged!")
+        print(f"pressure_in_time: {pressure_in_time}")
+        print(f"flow_in_time: {flow_in_time}"); print(((dP[1]-dP[0])/dP[1]))
+        conv = False
+
+    res_dict = {"flow_in_time": flow_in_time,
+            "pressure_in_time": pressure_in_time,
+            "area": area,
+            "times" : [times[-1]]}
+    return res_dict, conv
