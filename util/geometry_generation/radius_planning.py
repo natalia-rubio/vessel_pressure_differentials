@@ -2,11 +2,12 @@ import numpy as np
 # import matplotlib.pyplot as plt
 from scipy.stats import norm
 
-def get_radii(length, inlet_radius, outlet_radius, stenosis_dict, elem_length=1):
+def get_radii(length, inlet_radius, outlet_radius, stenosis_dict):
     """
     Returns a list of radii
     """
-    num_pts = int(length / elem_length)
+    num_pts = 100
+    elem_length = length / (num_pts-1)
     base_radii = np.linspace(inlet_radius, outlet_radius, num_pts).astype(float)
 
     pts = np.linspace(0, num_pts, num_pts)

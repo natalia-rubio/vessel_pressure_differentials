@@ -1,18 +1,19 @@
 import numpy as np
 #import matplotlib.pyplot as plt
 
-def get_path(length, curvature, elem_length=1):
+def get_path(length, curvature):
     """
     Returns a path of a given length and curvature
     curvature varies between -90 and 90 degrees
     """
-    num_pts = int(length / elem_length)
+    num_pts = 100
+    elem_length = length / (num_pts-1)
     angles = np.linspace(0, curvature, num_pts-1)
     path = [[0.0, 0.0, 0.0],]
 
     for i in range(num_pts-1):
-        x = float(path[-1][0] + elem_length * np.sin(angles[i]*np.pi/180))
-        y = float(path[-1][1] + elem_length * np.cos(angles[i]*np.pi/180))
+        x = (1+i) * elem_length * np.sin(angles[i]*np.pi/180) #path[-1][0] 
+        y = (1+i) * elem_length * np.cos(angles[i]*np.pi/180) #float(path[-1][1] + 
         z = float(0)
         path.append([x, y, z])
     path.reverse()

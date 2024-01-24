@@ -11,16 +11,14 @@ def get_vessel_segmentations(geo_params):
 
     # Get path
     path_list = path_planning.get_path(length=geo_params["length"], 
-                                  curvature=geo_params["curvature"], 
-                                  elem_length=geo_params["length"]/num_pts)
+                                  curvature=geo_params["curvature"])
     
     radii_list = radius_planning.get_radii(length=geo_params["length"],
                                     inlet_radius=geo_params["inlet_radius"],
                                     outlet_radius=geo_params["outlet_radius"],
                                     stenosis_dict= {"magnitude": geo_params["stenosis_magnitude"], 
                                                     "spread": geo_params["stenosis_spread"],
-                                                    "location": geo_params["stenosis_location"]},
-                                    elem_length=geo_params["length"]/num_pts)
+                                                    "location": geo_params["stenosis_location"]})
 
     path = sv.pathplanning.Path()
     for point in path_list:

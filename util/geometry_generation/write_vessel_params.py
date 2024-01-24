@@ -58,6 +58,18 @@ def generate_param_stat_dicts():
                 "inlet_velocity": [50, 150, 100, 20]}
     
     save_dict(params_stat_dict, f"data/param_stat_dicts/param_stat_dict_{anatomy}")
+
+    anatomy = "stenosed"
+    params_stat_dict = {"length": [8, 12, 10, 1], 
+                "curvature": [0, 0, 0, 0],
+                "inlet_radius": [0.2, 0.6, 0.4, 0.1],
+                "outlet_radius": [0.2, 0.6, 0.4, 0.1],
+                "stenosis_magnitude": [-0.5, -0.5, -0.5, 0.2], 
+                "stenosis_spread": [0.005, 0.005, 0.005, 0],
+                "stenosis_location": [0, 1, 0.5, 0.2],
+                "inlet_velocity": [50, 150, 100, 20]}
+    
+    save_dict(params_stat_dict, f"data/param_stat_dicts/param_stat_dict_{anatomy}")
     return
 # params_stat_dict = load_dict("data/param_stat_dict")[anatomy_name]
 # print(params_stat_dict)
@@ -66,3 +78,4 @@ if __name__ == '__main__':
     generate_param_stat_dicts()
     write_anatomy_junctions(anatomy = "curved", set_type = "mesh_convergence", num_junctions = 4)
     write_anatomy_junctions(anatomy = "straight", set_type = "mesh_convergence", num_junctions = 4)
+    write_anatomy_junctions(anatomy = "stenosed", set_type = "mesh_convergence", num_junctions = 4)

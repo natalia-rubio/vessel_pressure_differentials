@@ -32,7 +32,7 @@ def extract_soln(fpath_1dsol, offset = 10):
     area = soln_array["area"]
     radius = np.sqrt(area/np.pi)
     pressure_poiseuille = [pressure[offset]]
-    for i in range(len(incs[offset:-offset])):
+    for i in range(len(incs)):
         ind = i + offset
         pressure_poiseuille.append(pressure_poiseuille[i] - dP_poiseuille(flow[ind], radius[ind], incs[ind]))
     pressure_poiseuille = np.asarray(pressure_poiseuille)
@@ -41,11 +41,16 @@ def extract_soln(fpath_1dsol, offset = 10):
 def plot_vars(anatomy, set_type, geometry, flow_name, plot_pressure = True):
     if anatomy == "straight":
         cell_list = ["4.1E3", "1.9E4", "5.4E4", "1.2E5"]
+    elif anatomy == "curved":
+        cell_list = ["3.8E3", "2.0E4", "5.5E4", "1.2E5"]
     offset = 0
     plt.clf()
     fig, (ax1, ax2, ax3) = plt.subplots(3, 1, gridspec_kw={'height_ratios': [3,1, 1]}, sharex=True)
     geo_list = os.listdir(f"data/synthetic_vessels_reduced_results/{anatomy}/{set_type}")
     geo_list.sort()
+    for geo in geo_list:
+        if not geo[0].isalnum():
+            geo_list.remove(geo)
     print(geo_list)
     for geometry in geo_list:
 
@@ -63,14 +68,14 @@ def plot_vars(anatomy, set_type, geometry, flow_name, plot_pressure = True):
         ax3.set_ylabel("Area (cm^2)")
         ax3.set_xlabel("Distance (cm)")
         ax3.set_ylim([0, 1.5*np.max(area)])
-    ax1.plot(dist_array[offset:-offset], pressure_poiseuille/1333, "k", linewidth = 1, linestyle = "--", label = "Poiseuille")
+    ax1.plot(dist_array, pressure_poiseuille/1333, "k", linewidth = 1, linestyle = "--", label = "Poiseuille")
     ax1.legend()
     fig.savefig(f"results/simulation_centerline_results/{anatomy}_{set_type}_flow_{flow_name}.pdf")
 
     return
 
 if __name__ == "__main__":
-    anatomy = "straight"
+    anatomy = "curved"
     set_type = "mesh_convergence"
     geometry = "s_3"
     flow = 1

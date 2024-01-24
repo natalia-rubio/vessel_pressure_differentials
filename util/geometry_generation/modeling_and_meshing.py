@@ -42,7 +42,7 @@ def construct_model(model_name, segmentations, geo_params):
 
     return model
 
-def get_mesh(model_name, model, geo_params, anatomy, set_type, mesh_divs = 3):
+def get_mesh(model_name, model, geo_params, anatomy, set_type, mesh_divs = 3, sphere_ref = 2):
     min_dimension = min([geo_params["inlet_radius"], geo_params["outlet_radius"]])
     edge_size = min_dimension/mesh_divs 
     caps = model.identify_caps()
@@ -57,6 +57,11 @@ def get_mesh(model_name, model, geo_params, anatomy, set_type, mesh_divs = 3):
     mesher.set_boundary_layer_options(number_of_layers=2, edge_size_fraction=0.5, layer_decreasing_ratio=0.8, constant_thickness=False)
     options = sv.meshing.TetGenOptions(global_edge_size = edge_size, surface_mesh_flag=True, volume_mesh_flag=True)
     options.boundary_layer_inside = True
+    options.sphere_refinement.append({'edge_size':edge_size/sphere_ref, 
+                                      'radius':200*geo_params["stenosis_spread"], 
+                                      'center':[geo_params["length"] * geo_params["stenosis_location"] *np.sin(geo_params["curvature"]*np.pi/180), 
+                                                geo_params["length"] * geo_params["stenosis_location"] *np.cos(geo_params["curvature"]*np.pi/180), 0]})
+    options.sphere_refinement_on = True
     options.optimization = 10
     options.quality_ratio = 1
     options.no_bisect = True

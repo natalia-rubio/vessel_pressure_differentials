@@ -17,13 +17,13 @@ def get_unif_random(stats_list, lower_rng_bound = 0.4, upper_rng_bound = 0.6):
 def get_middle(stats_list):
     return stats_list[0] + 0.5 * (stats_list[1]-stats_list[0])
 
-def generate_vessel_mesh(geo_name, geo_params, anatomy, set_type, mesh_divs):
+def generate_vessel_mesh(geo_name, geo_params, anatomy, set_type, mesh_divs, sphere_ref = 2):
 
     segmentations = get_vessel_segmentations(geo_params)
     print("Segmentation Done!")
     model = construct_model(geo_name, segmentations, geo_params)
     print("Model Done!")
-    mesh = get_mesh(geo_name, model, geo_params, anatomy, set_type, mesh_divs)
+    mesh = get_mesh(geo_name, model, geo_params, anatomy, set_type, mesh_divs, sphere_ref)
     print("Mesh Done!")
     return
 
@@ -44,7 +44,7 @@ def launch_anatomy_geo_sweep(anatomy, set_type, num_geos = 5):
 
             print(geo_params)
             if anatomy == "curved" or anatomy == "straight":
-                generate_vessel_mesh(geo_name, geo_params, anatomy, set_type, mesh_divs = 0.1)
+                generate_vessel_mesh(geo_name, geo_params, anatomy, set_type, mesh_divs = 2)
             else:
                 print("Didn't recognize anatomy type.")
     return
@@ -56,6 +56,7 @@ def launch_mesh_sweep(anatomy, set_type, num_geos = 1):
     geos.sort()
 
     mesh_divs_list_curved = [1,2,3,4]
+    sphere_ref_list = [1,2,3,4]
     for i in range(len(geos)):
 
         geo_name = geos[i]
@@ -67,8 +68,9 @@ def launch_mesh_sweep(anatomy, set_type, num_geos = 1):
             geo_params = load_dict(dir+"/"+geo_name+"/vessel_params_dict")
             print(geo_params)
             if anatomy == "curved" or anatomy == "straight":
-
                 generate_vessel_mesh(geo_name, geo_params, anatomy, set_type, mesh_divs = mesh_divs_list_curved[i])
+            if anatomy == "stenosed":
+                generate_vessel_mesh(geo_name, geo_params, anatomy, set_type, mesh_divs = 3, sphere_ref = sphere_ref_list[i] )
             else:
                 print("Didn't recognize anatomy type.")
 
@@ -87,7 +89,10 @@ def generate_geometries(anatomy, set_type, num_geos):
 if __name__ == "__main__":
     anatomy = sys.argv[1]
     set_type = sys.argv[2]
-    generate_geometries(anatomy = "curved", set_type = "mesh_convergence", num_geos = 150)
+    generate_geometries(anatomy = anatomy, set_type = set_type, num_geos = 150)
+    # geo_params = load_dict("/Users/natalia/Desktop/vessel_pressure_differentials/data/synthetic_vessels/test/test/vertical_working/vessel_params_dict")
+
+    # generate_vessel_mesh("vertical_not_working", geo_params, "test", "test", mesh_divs = 2)
 
 # USE THIS COMMAND TO RUN WITH SIMVASCULAR PYTHON:
 # /usr/local/sv/simvascular/2023-02-02/simvascular --python -- util/geometry_generation/launch_anatomy_sweep.py
