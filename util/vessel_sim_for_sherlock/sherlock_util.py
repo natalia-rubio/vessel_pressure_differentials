@@ -9,7 +9,7 @@ import subprocess
 import time
 import copy
 
-def set_up_sim_directories(anatomy, set_type, geo_name, flow_name):
+def set_up_sim_directories(anatomy, set_type, geo_name, flow_name, num_cores):
     print("Starting run_simulation function.")
     if not os.path.exists(f"/scratch/users/nrubio/synthetic_vessels_reduced_results/{anatomy}"):
         os.mkdir(f"/scratch/users/nrubio/synthetic_vessels_reduced_results/{anatomy}")
@@ -20,8 +20,12 @@ def set_up_sim_directories(anatomy, set_type, geo_name, flow_name):
     results_dir = f"/scratch/users/nrubio/synthetic_vessels_reduced_results/{anatomy}/{set_type}/{geo_name}"
     if os.path.exists(results_dir) == False:
         os.mkdir(results_dir)
-    if os.path.exists(f"/scratch/users/nrubio/synthetic_vessels/{anatomy}/{set_type}/{geo_name}/{flow_name}"):
-        os.system(f"rm -r /scratch/users/nrubio/synthetic_vessels/{anatomy}/{set_type}/{geo_name}/{flow_name}")
+
+    if not os.path.exists(f"/scratch/users/nrubio/synthetic_vessels/{anatomy}/{set_type}/{geo_name}/{flow_name}"):
+        print("inital solutions missing")
+    if os.path.exists(f"/scratch/users/nrubio/synthetic_vessels/{anatomy}/{set_type}/{geo_name}/{flow_name}/{num_cores}-procs_case"):
+        os.system(f"rm -r /scratch/users/nrubio/synthetic_vessels/{anatomy}/{set_type}/{geo_name}/{flow_name}/{num_cores}-procs_case")
+
     os.system(f"mkdir /scratch/users/nrubio/synthetic_vessels/{anatomy}/{set_type}/{geo_name}/{flow_name}")
     return
 

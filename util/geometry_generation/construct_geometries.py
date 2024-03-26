@@ -2,6 +2,7 @@ import sys
 sys.path.append("/Users/natalia/Desktop/vessel_pressure_differentials")
 from util.geometry_generation.segmentation import *
 from util.geometry_generation.modeling_and_meshing import *
+from util.geometry_generation.initialize_soln import *
 
 def load_dict(filename_):
     with open(filename_, 'rb') as f:
@@ -45,6 +46,7 @@ def launch_anatomy_geo_sweep(anatomy, set_type, num_geos = 5):
             print(geo_params)
             if anatomy == "curved" or anatomy == "straight":
                 generate_vessel_mesh(geo_name, geo_params, anatomy, set_type, mesh_divs = 2)
+                generate_initial_sol(geo_name, anatomy, set_type, geo_params)
             else:
                 print("Didn't recognize anatomy type.")
     return
@@ -69,8 +71,10 @@ def launch_mesh_sweep(anatomy, set_type, num_geos = 1):
             print(geo_params)
             if anatomy == "curved" or anatomy == "straight":
                 generate_vessel_mesh(geo_name, geo_params, anatomy, set_type, mesh_divs = mesh_divs_list_curved[i])
+                generate_initial_sol(geo_name, anatomy, set_type, geo_params)
             if anatomy == "stenosed":
                 generate_vessel_mesh(geo_name, geo_params, anatomy, set_type, mesh_divs = 3, sphere_ref = sphere_ref_list[i] )
+                generate_initial_sol(geo_name, anatomy, set_type, geo_params)
             else:
                 print("Didn't recognize anatomy type.")
 

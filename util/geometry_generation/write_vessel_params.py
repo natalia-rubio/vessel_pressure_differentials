@@ -65,7 +65,7 @@ def generate_param_stat_dicts():
                 "inlet_radius": [0.2, 0.6, 0.4, 0.1],
                 "outlet_radius": [0.2, 0.6, 0.4, 0.1],
                 "stenosis_magnitude": [-0.5, -0.5, -0.5, 0.2], 
-                "stenosis_spread": [0.005, 0.005, 0.005, 0],
+                "stenosis_spread": [0.01, 0.01, 0.01, 0],
                 "stenosis_location": [0, 1, 0.5, 0.2],
                 "inlet_velocity": [50, 150, 100, 20]}
     

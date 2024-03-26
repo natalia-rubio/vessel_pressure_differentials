@@ -4,7 +4,7 @@ def write_job_steady(anatomy, set_type, geo_name, flow_name, flow_index, num_cor
 
     geo_job_script = f"#!/bin/bash\n\
 # Name of your job\n\
-#SBATCH --job-name={geo_name}_flow_sweep\n\
+#SBATCH --job-name={geo_name}_{flow_name}\n\
 # Name of partition\n\
 #SBATCH --partition=amarsden\n\
 #SBATCH --output=/scratch/users/nrubio/job_scripts/{geo_name}_{flow_name}.o%j\n\
@@ -50,6 +50,7 @@ kkrm -r $outdir"
     f.close()
     return
 
+/home/groups/amarsden/svSolver-github/BuildWithMake/Bin/svpost.exe -start 220 -stop 320 -incr 1 -vtkcombo -indir 24-procs_case -outdir . -vtu solution_flow_3.vtu > /dev/null\n\
 
 def write_svpre_steady(anatomy, set_type, geo, flow_index, flow_params, cap_numbers, inlet_cap_number, num_time_steps, time_step_size):
     res_caps = cap_numbers
@@ -74,6 +75,7 @@ bct_write_vtp /scratch/users/nrubio/synthetic_vessels/{anatomy}/{set_type}/{geo}
 pressure_vtp /scratch/users/nrubio/synthetic_vessels/{anatomy}/{set_type}/{geo}/mesh-complete/mesh-surfaces/cap_{res_caps[0]}.vtp 0\n\
 noslip_vtp /scratch/users/nrubio/synthetic_vessels/{anatomy}/{set_type}/{geo}/mesh-complete/walls_combined.vtp\n\
 write_geombc /scratch/users/nrubio/synthetic_vessels/{anatomy}/{set_type}/{geo}/{flow_name}/geombc.dat.1\n\
+read_all_variables_vtu /scratch/users/nrubio/synthetic_vessels/{anatomy}/{set_type}/{geo}/{flow_name}/initial_soln.vtu\n\
 write_restart /scratch/users/nrubio/synthetic_vessels/{anatomy}/{set_type}/{geo}/{flow_name}/restart.0.1"
 
     f = open(f"/scratch/users/nrubio/synthetic_vessels/{anatomy}/{set_type}/{geo}/{flow_name}/{flow_name}_job.svpre", "w")

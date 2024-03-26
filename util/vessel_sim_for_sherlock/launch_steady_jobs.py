@@ -8,7 +8,7 @@ num_cores = int(sys.argv[4])
 num_geos = int(sys.argv[5])
 num_flows = int(sys.argv[6])
 
-time_step_size = 0.01
+time_step_size = 0.001
 num_launched = 0
 print(f"Launching {num_geos} steady flow sweeps.")
 dir = f"/scratch/users/nrubio/synthetic_vessels/{anatomy}/{set_type}"
@@ -45,7 +45,7 @@ while num_launched < num_geos:
             if os.path.exists(f"/scratch/users/nrubio/synthetic_vessels_reduced_results/{anatomy}/{set_type}/{geo_name}/flow_{i}_red_sol"):
                 print(f"Simulation already complete for flow {flow_index}")
                 continue
-            set_up_sim_directories(anatomy, set_type, geo_name, flow_name)
+            set_up_sim_directories(anatomy, set_type, geo_name, flow_name, num_cores)
             flow_params = {"flow_amp": inlet_flow*inlet_flow_fac,
                             "vel_in": inlet_flow*inlet_flow_fac/inlet_area,
                             "res_1": 100,
